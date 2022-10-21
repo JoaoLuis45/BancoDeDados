@@ -1,14 +1,17 @@
-import pyodbc
+import os
+import psycopg2
+import dotenv
 import PySimpleGUI as sg
+
+dotenv.load_dotenv()
 
 class app:
     def __init__(self):
-        self.dados = (
-            "Driver={SQL Server};"
-            "Server=REIFFERPC\SQLEXPRESS;"
-            "Database=FirstDB"
-        )
-        self.conexao = pyodbc.connect(self.dados)
+        self.conexao = psycopg2.connect(user=os.environ['FDB_user'],
+                                  password=os.environ['FDB_password'],
+                                  host=os.environ['FDB_host'],
+                                  port=os.environ['FDB_port'],
+                                  database=os.environ['FDB_database'])
         self.cursor = self.conexao.cursor()
         self.cursor.execute("SELECT * FROM Clientes")
         self.lista = self.cursor.fetchall()
